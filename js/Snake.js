@@ -147,7 +147,11 @@ class Game{
 
     endGame(){
         $('#snake-app').empty(); 
-        $('#snake-app').append("GAME OVER"); 
+        if(this.snake.tail.length == this.canvas.length){
+            $('#snake-app').append("YOU WON!!"); 
+        }else{
+            $('#snake-app').append("GAME OVER!!"); 
+        }
     }
 
     addToken(){
@@ -198,7 +202,7 @@ $(document).ready(function(){
         if(game.update() == false){
             clearInterval(update); 
         }
-    }, 500);
+    }, 250);
 
     $('body').append("<input type='button'" + 
         "value=\"Play&nbsp;again!\" onClick=window.location.reload()>"); 
