@@ -207,19 +207,26 @@ $(document).ready(function(){
     window.onkeydown = function (e) {
         if (e.keyCode == '38') {
             // up arrow
-            game.snake.setMovementVector(0,-1); 
+            if(game.snake.getMovementVector()[0] != 0){
+                game.snake.setMovementVector(0,-1); 
+            }
         }
         else if (e.keyCode == '40') {
             // down arrow
-            game.snake.setMovementVector(0,1); 
-        }
-        else if (e.keyCode == '37') {
+            if(game.snake.getMovementVector()[0] != 0){
+                game.snake.setMovementVector(0,1); 
+            }
+        }else if (e.keyCode == '37') {
             // left arrow
-            game.snake.setMovementVector(-1,0); 
+            if(game.snake.getMovementVector()[1] != 0){
+                game.snake.setMovementVector(-1,0); 
+            }
         }
         else if (e.keyCode == '39') {
             // right arrow
-            game.snake.setMovementVector(1,0); 
+            if(game.snake.getMovementVector()[1] != 0){
+                game.snake.setMovementVector(1,0); 
+            }
         }
     }
 }); 
