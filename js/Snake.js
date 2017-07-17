@@ -200,6 +200,9 @@ $(document).ready(function(){
         }
     }, 500);
 
+    $('body').append("<input type='button'" + 
+        "value=\"Play&nbsp;again!\" onClick=window.location.reload()>"); 
+
     //Cambio direccion
     window.onkeydown = function (e) {
         if (e.keyCode == '38') {

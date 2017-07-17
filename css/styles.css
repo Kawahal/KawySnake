@@ -1,9 +1,17 @@
+body{
+    color: white; 
+    text-align: center; 
+}
+h1{
+    color: black; 
+}
 .canvas{
     width: 500px;
     height: 500px; 
     background-color: black; 
     column-count: 10;
     column-gap: 50%;
+    margin: auto; 
 }
 
 .box{
@@ -22,8 +30,4 @@
     background-color: green;  
     border-size:2px; 
     border-color: gray; 
-}
-
-body{
-    color: white; 
 }
