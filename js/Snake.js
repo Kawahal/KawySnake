@@ -16,6 +16,10 @@ class Snake {
         this.tail.push(new TailSquare(x,y)); 
     }
 
+    increaseInHead(x,y){
+        this.tail.unshift(new TailSquare(x,y)); 
+    }
+
     getMovementVector(){
         return this.movementVector; 
     }
@@ -29,6 +33,7 @@ class Snake {
         //"collision" - snake collision
         //"token" - found the ball, increases size
         //$('body').append("<div>" + this.direction + "</div>"); 
+        let isToken = false; 
         let xOffset = this.getMovementVector()[0];  
         let yOffset = this.getMovementVector()[1];  
         let actualX = this.tail[0].x + xOffset; 
@@ -64,22 +69,28 @@ class Snake {
                 return "collision"; 
             }
             if(i == 0 && space[nextX][nextY].content == "token"){
+                //Si hay token, sustituimos por una serpiente
+                $('#' + nextX + nextY).removeClass('token'); 
+                $('#' + nextX + nextY).addClass('snake'); 
+                space[nextX][nextY].content ="snake"; 
+                this.increaseInHead(nextX, nextY); 
                 return "token"; 
+            }else{
+                //Nos movemos si no hay token
+                this.tail[i].changeCoordinates(nextX, nextY); 
+                space[nextX][nextY].content = "snake"; 
+
+                //Cambiamos colores de celda
+                $('#' + actualX + actualY).removeClass('snake'); 
+                $('#' + actualX + actualY).addClass('empty'); 
+                $('#' + nextX + nextY).removeClass('empty'); 
+                $('#' + nextX + nextY).addClass('snake'); 
+
             }
-
-            //Nos movemos
-            this.tail[i].changeCoordinates(nextX, nextY); 
-            space[nextX][nextY].content = "snake"; 
-
-            //Cambiamos colores de celda
-            $('#' + actualX + actualY).removeClass('snake'); 
-            $('#' + actualX + actualY).addClass('empty'); 
-            $('#' + nextX + nextY).removeClass('empty'); 
-            $('#' + nextX + nextY).addClass('snake'); 
 
         }
         space[nextX][nextY].content = null; 
-        return true; 
+        return "empty"; 
     }
 
 }
@@ -125,11 +136,11 @@ class Game{
 
     update(){
         let moveCompleted = this.snake.move(this.canvas); 
+        console.log(moveCompleted); 
         if(moveCompleted == "collision"){
             this.endGame(); 
         }else if(moveCompleted == "token"){
-            this.snake.increaseSize(); 
-            this.toggleToken(); 
+            this.addToken(); 
         }
         console.log(this.snake.direction); 
     }
@@ -168,7 +179,7 @@ $(document).ready(function(){
     game.startGame();
     var update = setInterval(function(){
         game.update(); 
-    }, 1000);
+    }, 500);
 
     //Cambio direccion
     window.onkeydown = function (e) {
@@ -188,10 +199,6 @@ $(document).ready(function(){
             // right arrow
             game.snake.setMovementVector(1,0); 
         }
-        console.log("Event: get->" + game.snake.getMovementVector()[0] +
-            " " + game.snake.getMovementVector()[1] + 
-            " attr->" + game.snake.movementVector[0] + 
-            " " + game.snake.movementVector[1]); 
     }
 }); 
 
