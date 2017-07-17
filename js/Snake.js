@@ -9,26 +9,28 @@ class Box {
 class Snake {
     constructor(){
         this.tail = [ new TailSquare(0,0) ]
-        this.direction = "right"; 
+        this.movementVector = [0,1]; 
     }
 
     increaseSize(x, y){
         this.tail.push(new TailSquare(x,y)); 
     }
 
-    move(space){
-        let xOffset = 0; 
-        let yOffset = 0; 
-        if(this.direction == "right"){
-            xOffset = 1; 
-        }else if(this.direction = "left"){
-            xOffset = -1;  
-        }else if(this.direction="bottom"){
-            yOffset = 1; 
-        }else if(this.direction="top"){
-            yOffset = -1; 
-        }
+    getMovementVector(){
+        return this.movementVector; 
+    }
+    setMovementVector(x,y){
+        this.movementVector = [x,y]; 
+    }
 
+    move(space){
+        //--return 
+        //"empty" - nothing found
+        //"collision" - snake collision
+        //"token" - found the ball, increases size
+        //$('body').append("<div>" + this.direction + "</div>"); 
+        let xOffset = this.getMovementVector()[0];  
+        let yOffset = this.getMovementVector()[1];  
         let actualX = this.tail[0].x + xOffset; 
         let actualY = this.tail[0].y + yOffset; 
         let nextX = actualX; 
@@ -52,45 +54,32 @@ class Snake {
                 nextY = vSize - 1; 
             }
 
-            console.log("Next square moves to: " + nextX+ " "
-                + nextY); 
-            
             //Guardamos coordenadas actuales
             actualX = this.tail[i].x; 
             actualY = this.tail[i].y; 
 
+
+            //Comprobamos contenido
+            if(i == 0 && space[nextX][nextY].content == "snake"){
+                return "collision"; 
+            }
+            if(i == 0 && space[nextX][nextY].content == "token"){
+                return "token"; 
+            }
+
             //Nos movemos
             this.tail[i].changeCoordinates(nextX, nextY); 
             space[nextX][nextY].content = "snake"; 
-            
+
             //Cambiamos colores de celda
+            $('#' + actualX + actualY).removeClass('snake'); 
+            $('#' + actualX + actualY).addClass('empty'); 
             $('#' + nextX + nextY).removeClass('empty'); 
             $('#' + nextX + nextY).addClass('snake'); 
 
         }
-        console.log( "next X + Y " + nextX + nextY); 
         space[nextX][nextY].content = null; 
         return true; 
-    }
-
-    nextCoordinates(){
-        let xOffset = 0; 
-        let yOffset = 0; 
-        if(this.direction == "right"){
-            xOffset = 1; 
-            yOffset = 0; 
-        }else if(this.direction = "left"){
-            xOffset = -1;  
-            yOffset = 0; 
-        }else if(this.direction="bottom"){
-            yOffset = 1; 
-            xOffset = 0; 
-        }else if(this.direction="top"){
-            yOffset = -1; 
-            xOffset = 0; 
-        }
-        return [this.tail[0].x + xOffset, 
-            this.tail[0].y + yOffset];
     }
 
 }
@@ -131,26 +120,43 @@ class Game{
             }
         }
         this.snake = new Snake(); 
+        this.addToken(); 
     }
 
     update(){
         let moveCompleted = this.snake.move(this.canvas); 
-        if(moveCompleted == false){
+        if(moveCompleted == "collision"){
             this.endGame(); 
+        }else if(moveCompleted == "token"){
+            this.snake.increaseSize(); 
+            this.toggleToken(); 
         }
-
-        let validToken = false; 
-        let nextTokenX = Math.floor((Math.random() * hSize) + 0); 
-        let nextTokenY = Math.floor((Math.random() * hSize) + 0); 
-        this.canvas[nextTokenX][nextTokenY].content = "token";
-        let id = "#" + nextTokenX + nextTokenY; 
-        $(id).removeClass('empty'); 
-        $(id).addClass('token'); 
+        console.log(this.snake.direction); 
     }
 
     endGame(){
         $('#snake-app').empty(); 
         $('#snake-app').append("GAME OVER"); 
+    }
+
+    addToken(){
+        let nextTokenX = Math.floor(Math.random() * (hSize-1 + 1));
+        let nextTokenY = Math.floor(Math.random() * (vSize-1 + 1));
+        this.canvas[nextTokenX][nextTokenY].content = "token";
+        let id = "#" + nextTokenX + nextTokenY; 
+        $(id).removeClass('empty'); 
+        $(id).addClass('token'); 
+    }
+    toggleToken(){
+        for(let i = 0; i<this.canvas.length; i+=1){
+            for(let j = 0; j <this.canvas[0].length; j+=1){
+                if(this.canvas[i][j].content == "token"){
+                    $('#'+i+""+j).removeClass("token"); 
+                    $('#'+i+""+j).addClass("empty"); 
+                }
+            }
+        }
+        this.addToken(); 
     }
 }
 
@@ -160,31 +166,32 @@ var vSize = 10;
 $(document).ready(function(){
     let game = new Game(); 
     game.startGame();
-    console.log("start"); 
     var update = setInterval(function(){
         game.update(); 
-        console.log("update"); 
     }, 1000);
 
-    //change of direction
+    //Cambio direccion
     window.onkeydown = function (e) {
-        console.log(e.keyCode); 
         if (e.keyCode == '38') {
             // up arrow
-            game.snake.direction == "top";
+            game.snake.setMovementVector(0,-1); 
         }
         else if (e.keyCode == '40') {
             // down arrow
-            game.snake.direction = "bottom";
+            game.snake.setMovementVector(0,1); 
         }
         else if (e.keyCode == '37') {
             // left arrow
-            game.snake.direction = "left";
+            game.snake.setMovementVector(-1,0); 
         }
         else if (e.keyCode == '39') {
             // right arrow
-            game.snake.direction = "right";  
+            game.snake.setMovementVector(1,0); 
         }
+        console.log("Event: get->" + game.snake.getMovementVector()[0] +
+            " " + game.snake.getMovementVector()[1] + 
+            " attr->" + game.snake.movementVector[0] + 
+            " " + game.snake.movementVector[1]); 
     }
 }); 
 
