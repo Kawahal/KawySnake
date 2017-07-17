@@ -1,0 +1,24 @@
+.canvas{
+    width: 500px;
+    height: 500px; 
+    background-color: gray; 
+    moz-column-count: 10;
+    -webkit-column-count: 10;
+    column-count: 10;
+}
+
+.box{
+    width: 50px; 
+    height: 50px; 
+}
+.empty{
+    background-color: gray; 
+}
+
+.active{
+    background-color: red;  
+}
+
+.snake{
+    background-color: green;  
+}
