@@ -136,13 +136,13 @@ class Game{
 
     update(){
         let moveCompleted = this.snake.move(this.canvas); 
-        console.log(moveCompleted); 
         if(moveCompleted == "collision"){
             this.endGame(); 
+            return false; 
         }else if(moveCompleted == "token"){
             this.addToken(); 
         }
-        console.log(this.snake.direction); 
+        return true; 
     }
 
     endGame(){
@@ -151,9 +151,26 @@ class Game{
     }
 
     addToken(){
-        let nextTokenX = Math.floor(Math.random() * (hSize-1 + 1));
-        let nextTokenY = Math.floor(Math.random() * (vSize-1 + 1));
-        this.canvas[nextTokenX][nextTokenY].content = "token";
+        let inSnake = true; 
+        let nextTokenX = 0; 
+        let nextTokenY = 0; 
+        do{
+            nextTokenX = Math.floor(Math.random() * (hSize-1 + 1));
+            nextTokenY = Math.floor(Math.random() * (vSize-1 + 1));
+            //Check de que no se encuentra en snake, si no se pide otro
+            for(let i = 0; i<this.snake.tail.length; i++){
+                if(this.snake.tail[i].x == nextTokenX &&
+                    this.snake.tail[i].y == nextTokenY){
+                    break; 
+                }
+                if(i == this.snake.tail.length -1){
+                    inSnake = false; 
+                }
+            }
+        }
+        while(inSnake)
+
+            this.canvas[nextTokenX][nextTokenY].content = "token";
         let id = "#" + nextTokenX + nextTokenY; 
         $(id).removeClass('empty'); 
         $(id).addClass('token'); 
@@ -178,7 +195,9 @@ $(document).ready(function(){
     let game = new Game(); 
     game.startGame();
     var update = setInterval(function(){
-        game.update(); 
+        if(game.update() == false){
+            clearInterval(update); 
+        }
     }, 500);
 
     //Cambio direccion

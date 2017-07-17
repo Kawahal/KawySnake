@@ -1,10 +1,9 @@
 .canvas{
     width: 500px;
     height: 500px; 
-    background-color: gray; 
-    moz-column-count: 10;
-    -webkit-column-count: 10;
+    background-color: black; 
     column-count: 10;
+    column-gap: 50%;
 }
 
 .box{
@@ -12,7 +11,7 @@
     height: 50px; 
 }
 .empty{
-    background-color: gray; 
+    background-color: black; 
 }
 
 .token{
@@ -21,4 +20,10 @@
 
 .snake{
     background-color: green;  
+    border-size:2px; 
+    border-color: gray; 
+}
+
+body{
+    color: white; 
 }
