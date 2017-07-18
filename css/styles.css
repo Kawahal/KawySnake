@@ -5,11 +5,21 @@ body{
 h1{
     color: black; 
 }
+
+h2{
+    color: white; 
+    font-style: bold; 
+    left: 0; 
+    right:0; 
+    font-size:50px; 
+    position: absolute; 
+}
 .canvas{
-    width: 500px;
+    width: 700px;
     height: 500px; 
-    background-color: black; 
+    background-color: #002200; 
     column-count: 10;
+    column-width: 50px; 
     column-gap: 50%;
     margin: auto; 
 }
@@ -17,17 +27,18 @@ h1{
 .box{
     width: 50px; 
     height: 50px; 
+    background-color: #002200; 
 }
 .empty{
-    background-color: black; 
 }
 
 .token{
     background-color: red;  
+    border-radius: 25px; 
 }
 
 .snake{
     background-color: green;  
-    border-size:2px; 
     border-color: gray; 
+    border-radius: 10px; 
 }

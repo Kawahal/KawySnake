@@ -110,7 +110,6 @@ class TailSquare {
 class Game{
     constructor(){
         this.gameOver = false; 
-        this.score = 0; 
         this.hBoxes = 10; 
         this.vBoxes = 10; 
         this.canvas = [];  
@@ -150,7 +149,7 @@ class Game{
         if(this.snake.tail.length == this.canvas.length){
             $('#snake-app').append("YOU WON!!"); 
         }else{
-            $('#snake-app').append("GAME OVER!!"); 
+            $('#snake-app').append("<h2>GAME OVER!!</h2>"); 
         }
     }
 
